@@ -3,14 +3,14 @@ from tinymce import models as tinymce_models
 
 
 class Place(models.Model):
-    title = models.CharField(max_length=100, help_text='Название')
-    description_short = models.CharField(max_length=1000, help_text='Короткое описание')
-    description_long = tinymce_models.HTMLField(max_length=10000, help_text='Полное описание')
-    coordinate_lng = models.FloatField(help_text='Координаты(долгота)')
-    coordinate_lat = models.FloatField(help_text='Координаты(широта)')
-    created_at = models.DateTimeField(help_text='Дата создания')
-    updated_at = models.DateTimeField(blank=True, null=True, help_text='Дата обновления')
-    published_at = models.DateTimeField(blank=True, null=True, help_text='Дата публикации')
+    title = models.CharField(max_length=100)
+    description_short = models.CharField(max_length=1000)
+    description_long = tinymce_models.HTMLField(max_length=10000)
+    coordinate_lng = models.FloatField()
+    coordinate_lat = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(blank=True, null=True, auto_now=True)
+    published_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         ordering = ['-created_at']
