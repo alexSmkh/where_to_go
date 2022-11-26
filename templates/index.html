@@ -264,6 +264,8 @@
 
         let data = await response.json();
 
+        console.log('data', data.title)
+
         if (sidebarApp.loadingPlaceId != placeId){
           // Place loading was cancelled by user
           return

@@ -21,7 +21,7 @@ def get_place(request, pk):
             'lng': place_entry.coordinate_lng,
         },
         'imgs': place_image_urls
-    },
+    }
 
     return JsonResponse(
         place,

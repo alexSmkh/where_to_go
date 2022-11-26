@@ -9,7 +9,7 @@ from places import views as places_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', where_to_go_views.show_main_page),
-    path('places/<int:pk>/', places_views.get_place),
+    path('places/<int:pk>/', places_views.get_place, name='get_place'),
 ]
 
 if settings.DEBUG:
