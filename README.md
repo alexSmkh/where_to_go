@@ -2,8 +2,10 @@
 
 This service helps people find interesting places to spend a weekend. Here is a map with locations, clicking on which will open a description.
 
-### You can see a demo app [here]()
-Login and password for the admin panel: `admin` `123456`
+![](https://dvmn.org/media/lessons/ezgif.com-gif-maker_4nWhtfQ.gif)
+
+### You can see a demo app [here](https://alexsmkh.pythonanywhere.com/)
+Login / password for the admin panel: `admin` / `123456`
     
 
 ### What you need to start this app locally
@@ -29,6 +31,6 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 6. Run server: `python manage.py runserver`
-7. [Enjoy](127.0.0.1:800)
+7. [Enjoy](http://127.0.0.1:8000)
 
     
