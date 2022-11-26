@@ -6,7 +6,7 @@ from .models import Place
 
 
 def get_place(request, pk):
-    place_entry = get_object_or_404(Place, pk=pk)
+    place_entry = get_object_or_404(Place.objects.prefetch_related('images'), pk=pk)
     place_image_urls = list(map(
         lambda image: request.build_absolute_uri(image.image.url),
         place_entry.images.all()
