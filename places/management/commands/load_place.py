@@ -1,3 +1,4 @@
+import glob
 import json
 import os.path
 
@@ -15,6 +16,23 @@ def create_place_image(place, place_image_url, image_filename):
     place_image.image.save(image_filename, ContentFile(response.content))
 
 
+def create_place(filepath):
+    with open(filepath) as json_file:
+        place = json.load(json_file)
+
+    place_entry = Place.objects.create(
+        title=place['title'],
+        description_short=place['description_short'],
+        description_long=place['description_long'],
+        coordinate_lng=place['coordinates']['lng'],
+        coordinate_lat=place['coordinates']['lat']
+    )
+
+    for num, image_url in enumerate(place['imgs'], start=1):
+        image_filename = f'{num}_{place["title"]}.jpg'
+        create_place_image(place_entry, image_url, image_filename)
+
+
 class Command(BaseCommand):
     help = 'Load place from json file'
 
@@ -26,22 +44,16 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        file_path = options['path']
+        path = options['path']
 
-        if not os.path.exists(file_path):
-            raise CommandError(f'{file_path} - file path does not exist')
+        if not os.path.exists(path):
+            raise CommandError(f'{path} - path does not exist')
 
-        with open(file_path) as json_file:
-            place = json.load(json_file)
+        if os.path.isfile(path):
+            create_place(path)
+            return
 
-        place_entry = Place.objects.create(
-            title=place['title'],
-            description_short=place['description_short'],
-            description_long=place['description_long'],
-            coordinate_lng=place['coordinates']['lng'],
-            coordinate_lat=place['coordinates']['lat']
-        )
+        filepaths = [filepath for filepath in glob.glob(os.path.join(path, '*.json'))]
 
-        for num, image_url in enumerate(place['imgs'], start=1):
-            image_filename = f'{num}_{place["title"]}.jpg'
-            create_place_image(place_entry, image_url, image_filename)
+        for filepath in filepaths:
+            create_place(filepath)

@@ -25,9 +25,31 @@ DEBUG=TRUE
 SECRET_KEY=*** generate any secret key ***
 ALLOWED_HOSTS=127.0.0.1,localhost
 ```
-5. Create the database: `python manage.py migrate`
-6. Create the admin: `python manage.py createsuperuser`
-7. Run server: `python manage.py runserver`
+5. Create the database: `./manage.py migrate`
+6. Create the admin: `./manage.py createsuperuser`
+7. Run server: `./manage.py runserver`
 8. [Enjoy](http://127.0.0.1:8000)
 
-    
+### How do you load test places?
+You can load a place from a json file, which should be:
+```json
+{
+    "title": "...",             # max = 100 symbols
+    "imgs": [
+        "https://url/to/image.jpg",
+        "...",
+        "...",
+        "..."
+    ],
+    "description_short": "...", # max = 1000 symbols
+    "description_long": "...",  # max = 10000 symbols
+    "coordinates": {            # float values
+        "lng": "...",           
+        "lat": "..."
+    }
+}
+```
+
+Run command: `./manage.py load_place --path [path]`, `path` - the path to file or directory path containing the json files.
+
+Test places data located in the `seed_place_data` directory.
