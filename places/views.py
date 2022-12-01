@@ -22,10 +22,7 @@ def get_place(request, pk):
     return JsonResponse(
         place,
         safe=False,
-        json_dumps_params={
-            'ensure_ascii': False,
-            'indent': 2,
-        },
+        json_dumps_params={'ensure_ascii': False},
     )
 
 
