@@ -19,8 +19,8 @@ def show_main_page(request):
             }
         })
     places = {
-        "type": "FeatureCollection",
-        "features": features,
+        'type': 'FeatureCollection',
+        'features': features,
     }
 
     context = {'places': places}
