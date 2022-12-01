@@ -7,10 +7,6 @@ from .models import Place
 
 def get_place(request, pk):
     place_entry = get_object_or_404(Place, pk=pk)
-    place_image_urls = list(map(
-        lambda image: request.build_absolute_uri(image.image.url),
-        place_entry.images.all()
-    ))
 
     place = {
         'title': place_entry.title,
@@ -20,7 +16,7 @@ def get_place(request, pk):
             'lat': place_entry.latitude,
             'lng': place_entry.longitude,
         },
-        'imgs': [place_image_urls]
+        'imgs': [image.image.url for image in place_entry.images.all()]
     }
 
     return JsonResponse(
