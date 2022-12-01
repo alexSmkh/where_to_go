@@ -10,7 +10,7 @@ def show_main_page(request):
             'type': 'Feature',
             'geometry': {
                 'type': 'Point',
-                'coordinates': [place.coordinate_lng, place.coordinate_lat]
+                'coordinates': [place.longitude, place.latitude]
             },
             'properties': {
                 'title': place.title,

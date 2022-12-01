@@ -24,8 +24,8 @@ def create_place(filepath):
         title=place['title'],
         description_short=place['description_short'],
         description_long=place['description_long'],
-        coordinate_lng=place['coordinates']['lng'],
-        coordinate_lat=place['coordinates']['lat']
+        longitude=place['coordinates']['lng'],
+        latitude=place['coordinates']['lat']
     )
 
     for num, image_url in enumerate(place['imgs'], start=1):

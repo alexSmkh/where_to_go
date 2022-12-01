@@ -17,8 +17,8 @@ def get_place(request, pk):
         'description_short': place_entry.description_short,
         'description_long': place_entry.description_long,
         'coordinates': {
-            'lat': place_entry.coordinate_lat,
-            'lng': place_entry.coordinate_lng,
+            'lat': place_entry.latitude,
+            'lng': place_entry.longitude,
         },
         'imgs': place_image_urls
     }
