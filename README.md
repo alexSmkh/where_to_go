@@ -32,7 +32,7 @@ ALLOWED_HOSTS=127.0.0.1,localhost
 
 ### How do you load test places?
 You can load a place from a json file, which should be:
-```text
+```json
 {
     "title": "...",             # max = 100 symbols
     "imgs": [
@@ -50,6 +50,6 @@ You can load a place from a json file, which should be:
 }
 ```
 
-Run command: `./manage.py load_place --path [path]`, `path` - the path to file or directory containing the json files.
+Run command: `./manage.py load_place --url [path]`, `url` - the path to a json file.
 
-Test places data located in the `seed_place_data` directory.
+Test places data located [here](https://github.com/devmanorg/where-to-go-places/tree/master/places).

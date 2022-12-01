@@ -1,34 +1,34 @@
-import glob
-import json
-import os.path
-
 import requests
 from django.core.files.base import ContentFile
 from django.core.management import BaseCommand, CommandError
 from places.models import Place, PlaceImage
 
 
-def create_place_image(place, place_image_url, image_filename):
-    response = requests.get(place_image_url)
+def fetch_data(url):
+    response = requests.get(url)
     response.raise_for_status()
+    return response
 
+
+def create_place_image(place, place_image_url, image_filename):
     place_image = PlaceImage(place=place)
+    response = fetch_data(place_image_url)
     place_image.image.save(image_filename, ContentFile(response.content))
 
 
-def create_place(filepath):
-    with open(filepath) as json_file:
-        place = json.load(json_file)
-
-    place_entry = Place.objects.create(
+def create_place(place):
+    place_entry, created = Place.objects.get_or_create(
         title=place['title'],
-        description_short=place['description_short'],
-        description_long=place['description_long'],
+        description_short=place.get('description_short', ''),
+        description_long=place.get('description_long', ''),
         longitude=place['coordinates']['lng'],
         latitude=place['coordinates']['lat']
     )
 
-    for num, image_url in enumerate(place['imgs'], start=1):
+    if not created:
+        return
+
+    for num, image_url in enumerate(place.get('imgs', []), start=1):
         image_filename = f'{num}_{place["title"]}.jpg'
         create_place_image(place_entry, image_url, image_filename)
 
@@ -38,22 +38,19 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '-p',
-            '--path',
+            '-u',
+            '--url',
             required=True
         )
 
     def handle(self, *args, **options):
-        path = options['path']
+        file_url = options['url']
 
-        if not os.path.exists(path):
-            raise CommandError(f'{path} - path does not exist')
-
-        if os.path.isfile(path):
-            create_place(path)
-            return
-
-        filepaths = [filepath for filepath in glob.glob(os.path.join(path, '*.json'))]
-
-        for filepath in filepaths:
-            create_place(filepath)
+        try:
+            create_place(fetch_data(file_url).json())
+        except requests.exceptions.HTTPError:
+            raise CommandError('Something went wrong. Check the file url and try again.')
+        except requests.exceptions.ConnectionError:
+            raise CommandError('Internet connection problems. Please try again later.')
+        except requests.exceptions.JSONDecodeError:
+            raise CommandError('You provided the wrong link. The link should lead to a json file.')
