@@ -4,8 +4,8 @@ from tinymce import models as tinymce_models
 
 class Place(models.Model):
     title = models.CharField(max_length=100)
-    description_short = models.TextField(blank=True, null=True)
-    description_long = tinymce_models.HTMLField(blank=True, null=True)
+    description_short = models.TextField(blank=True)
+    description_long = tinymce_models.HTMLField(blank=True)
     latitude = models.FloatField()
     longitude = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
