@@ -19,10 +19,6 @@ def get_place(request, pk):
         'imgs': [image.image.url for image in place_entry.images.all()]
     }
 
-    return JsonResponse(
-        place,
-        safe=False,
-        json_dumps_params={'ensure_ascii': False},
-    )
+    return JsonResponse(place, json_dumps_params={'ensure_ascii': False})
 
 
