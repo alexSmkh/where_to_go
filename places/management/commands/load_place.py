@@ -4,25 +4,24 @@ from django.core.management import BaseCommand, CommandError
 from places.models import Place, PlaceImage
 
 
-def fetch_data(url):
-    response = requests.get(url)
-    response.raise_for_status()
-    return response
-
-
 def create_place_image(place, place_image_url, image_filename):
-    place_image = PlaceImage(place=place)
-    response = fetch_data(place_image_url)
-    place_image.image.save(image_filename, ContentFile(response.content))
+    response = requests.get(place_image_url)
+    response.raise_for_status()
+
+    content_file = ContentFile(response.content, name=image_filename)
+
+    PlaceImage.objects.create(place=place, image=content_file)
 
 
 def create_place(place):
     place_entry, created = Place.objects.get_or_create(
         title=place['title'],
-        description_short=place.get('description_short', ''),
-        description_long=place.get('description_long', ''),
-        longitude=place['coordinates']['lng'],
-        latitude=place['coordinates']['lat']
+        defaults={
+            'description_short': place.get('description_short', ''),
+            'description_long': place.get('description_long', ''),
+            'longitude': place['coordinates']['lng'],
+            'latitude': place['coordinates']['lat']
+        }
     )
 
     if not created:
@@ -47,7 +46,9 @@ class Command(BaseCommand):
         file_url = options['url']
 
         try:
-            create_place(fetch_data(file_url).json())
+            response = requests.get(file_url)
+            response.raise_for_status()
+            create_place(response.json())
         except requests.exceptions.HTTPError:
             raise CommandError('Something went wrong. Check the file url and try again.')
         except requests.exceptions.ConnectionError:
