@@ -1,0 +1,1 @@
+web: python manage.py migrate && python manage.py collectstatic && gunicorn where_to_go.wsgi
